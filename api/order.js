@@ -1,43 +1,54 @@
-
-// Vercel serverless function to forward order to Telegram
-// Deploy this file as /api/order.js in Vercel
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const TELEGRAM_BOT_TOKEN = "7752346075:AAEjLAL6hPX8hfnLawhMB5pvTqxYO6vR0cU";
-const TELEGRAM_CHAT_ID = "6706839017";
-
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
+
   try {
-    const { product, quantity, phone, email, note } = req.body || {};
+    const { product, size, phone, email } = req.body;
+
     if (!product || !phone || !email) {
-      res.status(400).json({ error: 'Missing fields' });
-      return;
+      return res.status(400).json({ error: "Missing required fields" });
     }
-    const text = `📩 *New Order to Wild Heaven Beach*%0A
-*Product:* ${product}%0A*Quantity:* ${quantity}%0A*Phone:* ${phone}%0A*Email:* ${email}%0A*Note:* ${note || '-'}%0A
-*Time:* ${new Date().toLocaleString()}`;
-    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+
+    // Telegram Credentials
+    const BOT_TOKEN = "7752346075:AAEjLAL6hPX8hfnLawhMB5pvTqxYO6vR0cU";
+    const USER_ID = "6706839017"; // Your Telegram user ID
+
+    // Create message text
+    const message = `
+🍽️ *New Order Received*
+--------------------------------
+📌 *Product:* ${product}
+📏 *Size:* ${size || "N/A"}
+📞 *Phone:* ${phone}
+📧 *Email:* ${email}
+📌 *Note:* ${note}
+--------------------------------
+    `;
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+    const telegramRes = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: text,
-        parse_mode: 'MarkdownV2'
-      })
+        chat_id: USER_ID,
+        text: message,
+        parse_mode: "Markdown",
+      }),
     });
-    const j = await resp.json();
-    if (!j.ok) {
-      console.error('TG error', j);
-      res.status(500).json({ error: 'Telegram API error', details: j });
-      return;
+
+    const data = await telegramRes.json();
+
+    if (!telegramRes.ok) {
+      console.error("Telegram Error:", data);
+      return res.status(500).json({ error: "Telegram send failed", details: data });
     }
-    res.status(200).json({ ok: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+
+    return res.status(200).json({ success: true, message: "Order submitted successfully!" });
+
+  } catch (error) {
+    console.error("Server Error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
