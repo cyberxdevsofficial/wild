@@ -1,0 +1,47 @@
+/* Styles for Wild Heaven Beach Villa */
+:root{
+  --accent:#0b6fa4;
+  --accent-2:#f5c06b;
+  --text:#16324f;
+  --muted:#6b7885;
+  --radius:14px;
+  font-family: 'Montserrat', sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;color:var(--text);background:linear-gradient(180deg, rgba(11,111,164,0.08), rgba(245,192,107,0.03));-webkit-font-smoothing:antialiased;}
+.container{max-width:1000px;margin:0 auto;padding:1rem}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+.brand{display:flex;gap:0.75rem;align-items:center}
+.logo{width:64px;height:64px;object-fit:cover;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+.site-header{position:sticky;top:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(6px);border-bottom:1px solid rgba(0,0,0,0.04);z-index:50}
+.nav a{margin-left:1rem;text-decoration:none;color:var(--text);font-weight:500}
+.nav .btn{background:var(--accent);color:white;padding:0.6rem 0.9rem;border-radius:10px;text-decoration:none}
+.hamburger{display:none;background:none;border:none;font-size:1.4rem}
+.hero{padding:4rem 0;background-image:radial-gradient(circle at 10% 10%, rgba(11,111,164,0.06), transparent 10%), linear-gradient(180deg, rgba(255,255,255,0.6), transparent);border-bottom:1px solid rgba(0,0,0,0.03)}
+.hero-inner{padding:2rem}
+.hero h2{font-family:'Playfair Display', serif;font-size:2rem;margin:0}
+.hero p{color:var(--muted);margin-top:0.5rem}
+.cta{display:inline-block;margin-top:1rem;padding:0.7rem 1rem;border-radius:12px;background:var(--accent);color:white;text-decoration:none;font-weight:600}
+.menu{padding:2rem 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.card{background:white;border-radius:12px;padding:1rem;box-shadow:0 8px 24px rgba(11,111,164,0.06)}
+.about{padding:2rem 0}
+.site-footer{padding:1rem 0;background:transparent;border-top:1px solid rgba(0,0,0,0.03);margin-top:2rem}
+.footer-inner{display:flex;justify-content:space-between;align-items:center}
+
+.order-card{max-width:640px;margin:2rem auto;padding:1.2rem;border-radius:12px;background:white;box-shadow:0 12px 40px rgba(11,111,164,0.06)}
+.order-card h2{margin-top:0;font-family:'Playfair Display', serif}
+label{display:block;margin-top:0.8rem;font-weight:600}
+input[type="text"],input[type="tel"],input[type="email"],select,textarea,input[type="number"]{
+  width:100%;padding:0.7rem;border-radius:8px;border:1px solid #e6eef5;margin-top:0.3rem;
+}
+.btn{display:inline-block;padding:0.6rem 1rem;border-radius:10px;background:var(--accent);color:white;border:none;cursor:pointer;margin-top:1rem}
+.btn.small{padding:0.3rem 0.6rem;border-radius:8px}
+#status{margin-top:0.8rem;color:var(--muted)}
+
+@media(max-width:800px){
+  .nav{display:none}
+  .hamburger{display:block}
+  body.menu-open .nav{position:fixed;left:0;top:0;bottom:0;right:0;background:linear-gradient(180deg,rgba(11,111,164,0.9),rgba(245,192,107,0.95));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem}
+  body.menu-open .nav a{color:white;font-size:1.25rem}
+}
