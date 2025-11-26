@@ -1,108 +1,86 @@
-<!doctype html>
-<html lang="en">
+
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Place Order — Wild Heaven</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+<title>Order - Wild Heaven Beach Villa</title>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand">
-        <img src="/assets/logo.jpg" alt="Wild Heaven Logo" class="logo">
-        <div>
-          <h1>Wild Heaven Beach Villa</h1>
-        </div>
-      </div>
-      <nav class="nav">
-        <a href="/">Home</a>
-        <a href="/#menu">Menu</a>
-      </nav>
-    </div>
-  </header>
+<h2>Place Your Order</h2>
 
-  <main class="container">
-    <section class="order-card">
-      <h2>Place Your Order</h2>
-      <form id="orderForm">
-        <label for="product">Select Product</label>
-        <select id="product" name="product" required>
-          <optgroup label="Soups">
-            <option value="Leeks & Potato Soup | 900">Leeks & Potato Soup — Rs.900</option>
-            <option value="Vegetable Soup | 900">Vegetable Soup — Rs.900</option>
-            <option value="French Onion Soup | 1200">French Onion Soup — Rs.1200</option>
-            <option value="Cream of Tomato Soup | 1200">Cream of Tomato Soup — Rs.1200</option>
-            <option value="Cream of Carrot Soup | 1200">Cream of Carrot Soup — Rs.1200</option>
-            <option value="Egg & Noodle Soup | 1200">Egg & Noodle Soup — Rs.1200</option>
-            <option value="Cream of Chicken Soup | 1600">Cream of Chicken Soup — Rs.1600</option>
-            <option value="Sea Food Soup | 1600">Sea Food Soup — Rs.1600</option>
-          </optgroup>
-          <optgroup label="Rice">
-            <option value="Vegetable Fried Rice (M) | 700">Vegetable Fried Rice - M — Rs.700</option>
-            <option value="Vegetable Fried Rice (L) | 900">Vegetable Fried Rice - L — Rs.900</option>
-            <option value="Chicken Fried Rice (M) | 1100">Chicken Fried Rice - M — Rs.1100</option>
-            <option value="Chicken Fried Rice (L) | 1400">Chicken Fried Rice - L — Rs.1400</option>
-          </optgroup>
-        </select>
+<form id="orderForm">
+  <label>Product</label><br>
+  <select id="product" required>
+    <option>Leeks & Potato Soup</option>
+    <option>Vegitable Soup</option>
+    <option>French Onion Soup</option>
+    <option>Cream of Tomato Soup</option>
+    <option>Cream of Carrot Soup</option>
+    <option>Egg & Noodle Soup</option>
+    <option>Cream of Chicken Soup</option>
+    <option>Sea Food Soup</option>
+    <option>Vegitable Fried Rice - M</option>
+    <option>Vegitable Fried Rice - L</option>
+    <option>Chicken Fried Rice - M</option>
+    <option>Chicken Fried Rice - L</option>
+  </select><br><br>
 
-        <label for="quantity">Quantity</label>
-        <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+  <label>Size (if applicable)</label><br>
+  <input id="size" placeholder="M / L or leave empty"><br><br>
 
-        <label for="phone">Contact Number</label>
-        <input type="tel" id="phone" name="phone" placeholder="+94xxxxxxxxx" required>
+  <label>Phone</label><br>
+  <input id="phone" required><br><br>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="customer@example.com" required>
+  <label>Email</label><br>
+  <input id="email" type="email" required><br><br>
 
-        <label for="note">Special Requests (optional)</label>
-        <textarea id="note" name="note" rows="3" placeholder="Any special requests..."></textarea>
+  <label>Note</label><br>
+  <textarea id="note"></textarea><br><br>
 
-        <button type="submit" class="btn">Submit Order</button>
-        <div id="status" role="status" aria-live="polite"></div>
-      </form>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>© Wild Heaven Beach Villa</p>
-    </div>
-  </footer>
+  <button type="submit">Send Order</button>
+</form>
 
 <script>
-document.getElementById('orderForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const status = document.getElementById('status');
-  status.textContent = 'Sending order...';
+document.getElementById("orderForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-  const data = {
-    product: document.getElementById('product').value,
-    quantity: document.getElementById('quantity').value,
-    phone: document.getElementById('phone').value,
-    email: document.getElementById('email').value,
-    note: document.getElementById('note').value
-  };
+    const product = document.getElementById("product").value;
+    const size = document.getElementById("size").value || "N/A";
+    const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
+    const note = document.getElementById("note").value || "No Note";
 
-  try {
-    const res = await fetch('/api/order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const json = await res.json();
-    if (res.ok) {
-      status.textContent = 'Order submitted successfully! We will contact you soon.';
-      document.getElementById('orderForm').reset();
-    } else {
-      status.textContent = 'Error: ' + (json.error || 'Failed to submit order.');
+    const BOT_TOKEN = "7752346075:AAEjLAL6hPX8hfnLawhMB5pvTqxYO6vR0cU";
+    const CHAT_ID = "6706839017";
+
+    const message =
+`🍽️ New Order
+-----------------------------
+Product: ${product}
+Size: ${size}
+Phone: ${phone}
+Email: ${email}
+Note: ${note}
+-----------------------------`;
+
+    try {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message
+            })
+        });
+
+        alert("Order sent successfully!");
+        document.getElementById("orderForm").reset();
+
+    } catch (error) {
+        console.error(error);
+        alert("Error sending order!");
     }
-  } catch (err) {
-    status.textContent = 'Network error. Try again later.';
-    console.error(err);
-  }
 });
 </script>
+
 </body>
 </html>
