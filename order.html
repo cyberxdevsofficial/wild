@@ -4,16 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Place Order — Wild Heaven</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
+
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="brand">
         <img src="/assets/logo.jpg" alt="Wild Heaven Logo" class="logo">
         <div>
-          <h1>Wild Heaven Beach</h1>
+          <h1>Wild Heaven Beach Villa</h1>
         </div>
       </div>
       <nav class="nav">
@@ -26,6 +28,7 @@
   <main class="container">
     <section class="order-card">
       <h2>Place Your Order</h2>
+
       <form id="orderForm">
         <label for="product">Select Product</label>
         <select id="product" name="product" required>
@@ -39,6 +42,7 @@
             <option value="Cream of Chicken Soup | 1600">Cream of Chicken Soup — Rs.1600</option>
             <option value="Sea Food Soup | 1600">Sea Food Soup — Rs.1600</option>
           </optgroup>
+
           <optgroup label="Rice">
             <option value="Vegetable Fried Rice (M) | 700">Vegetable Fried Rice - M — Rs.700</option>
             <option value="Vegetable Fried Rice (L) | 900">Vegetable Fried Rice - L — Rs.900</option>
@@ -60,53 +64,67 @@
         <textarea id="note" name="note" rows="3" placeholder="Any special requests..."></textarea>
 
         <button type="submit" class="btn">Submit Order</button>
+
         <div id="status" role="status" aria-live="polite"></div>
       </form>
     </section>
   </main>
-  
-<script>
-document.getElementById("orderForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
 
-    const product = document.getElementById("product").value;
-    const size = document.getElementById("size").value || "N/A";
-    const phone = document.getElementById("phone").value;
-    const email = document.getElementById("email").value;
-    const note = document.getElementById("note").value || "No Note";
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© Wild Heaven Beach Villa</p>
+    </div>
+  </footer>
 
-    const BOT_TOKEN = "7752346075:AAEjLAL6hPX8hfnLawhMB5pvTqxYO6vR0cU";
-    const CHAT_ID = "6706839017";
+  <script>
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-    const message =
-`🍽️ New Order
------------------------------
-Product: ${product}
-Quantity: ${quantity}
-Phone: ${phone}
-Email: ${email}
-Note: ${note}
------------------------------`;
+      const status = document.getElementById('status');
+      status.textContent = 'Sending order...';
 
-    try {
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: message
-            })
+      // Read Form Data
+      const product = document.getElementById('product').value;
+      const quantity = document.getElementById('quantity').value;
+      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+      const note = document.getElementById('note').value;
+
+        `📦 *New Order Received*\n\n` +
+        `🍽 *Product:* ${product}\n` +
+        `🔢 *Quantity:* ${quantity}\n` +
+        `📞 *Phone:* ${phone}\n` +
+        `📧 *Email:* ${email}\n` +
+        (note ? `📝 *Note:* ${note}\n` : '');
+
+      try {
+        const telegramToken = "8592281339:AAExrFdWjgK0pM3XRRKc5J3otye0ulSc6Ps";
+        const chatId = "6706839017";
+
+        const res = await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: "Markdown"
+          })
         });
 
-        alert("Order sent successfully!");
-        document.getElementById("orderForm").reset();
+        const json = await res.json();
 
-    } catch (error) {
-        console.error(error);
-        alert("Error sending order!");
-    }
-});
-</script>
+        if (res.ok) {
+          status.textContent = "Order submitted successfully! We will contact you soon.";
+          document.getElementById('orderForm').reset();
+        } else {
+          status.textContent = "Error: " + (json.description || "Failed to submit order.");
+        }
+      } catch (err) {
+        status.textContent = "Network error. Try again later.";
+        console.error(err);
+      }
+    });
+  </script>
 
 </body>
 </html>
